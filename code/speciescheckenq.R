@@ -12,6 +12,7 @@ setwd("/home/primuser/Documents/RVK/code/")
 milesdata <- read.csv('../data/Nesbit.csv')
 
 
+
 vecdata <- read.csv('../data/Vtraits.csv')
 
 enqvist <- read.csv('../data/enqvist.csv')
@@ -130,4 +131,19 @@ gdata3 <- gf %>%
   mutate(score = if_else(gf$genus %in% ge$genus , 1, 0))
 
 sum(gdata3$score)
+
+
+#figure out the bacterial species
+y2k3 <- as.data.frame(paste(y2k$interactor1genus, y2k$interactor2species, y2k$interactor1kingdom))
+y2k3 <- as.data.frame(unique(y2k3))
+y2k3 <- y2k3%>% rename(Kingdom = `paste(y2k$interactor1genus, y2k$interactor2species, y2k$interactor1kingdom)`)
+y2k4 <- subset(y2k, interactor1kingdom == 'Bacteria',
+                select=c(interactor1kingdom, interactor1))
+
+kingdomVEC <- y2k$interactor1kingdom
+unique(kingdomVEC)
+bacspec <- as.data.frame(unique(y2k4$interactor1))
+bacspec <- bacspec %>% rename(species = `unique(y2k4$interactor1)`)
+bacspec <- data.frame(lapply(bacspec, as.character), stringsAsFactors=FALSE)
+bacspec2 <- merge(bacspec, VECNES2, by = 'species')
 
